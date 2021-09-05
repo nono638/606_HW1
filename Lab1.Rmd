@@ -1,0 +1,116 @@
+---
+title: 'Lab 1: Intro to R'
+author: "Noah Collin"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  openintro::lab_report: default
+---
+
+```{r load-packages, message=T}
+library(tidyverse)
+library(openintro)
+#library()
+```
+
+#data('arbuthnot', package='openintro')
+
+#glimpse(arbuthnot)
+
+### Exercise 1
+
+```{r view-girls-counts}
+arbuthnot$girls
+```
+
+
+### Exercise 2
+
+It's my opinion there's not a clear trend or even direction for the population of 
+girls born in this time period.  A broad summary would indicate that the number of girls born per year increased.
+
+```{r trend-girls}
+ggplot(data = arbuthnot, aes (x = year, y = girls)) +
+  geom_smooth() + 
+  geom_point() +
+  geom_line()
+```
+
+
+### Exercise 3
+
+Surprisingly, the ratio of boys baptized exceeds 50% for every data point observed.
+
+```{r plot-prop-boys-arbuthnot}
+arbuthnot <- arbuthnot %>%
+  mutate(total = boys + girls)
+arbuthnot <- arbuthnot %>%
+  mutate(boy_ratio = boys / total)
+
+ggplot(data = arbuthnot, aes (x = year, y = boy_ratio)) +
+  geom_smooth() + 
+  geom_point() +
+  geom_line()
+```
+
+
+### Exercise 4
+
+The "present" dataset contains data from 1940 - 2002.  That dataset has 63 rows and 3
+columns.  The column names are "year", "boys", and "girls".
+
+```{r dim-present}
+present %>%
+  summarize(min = min(year), max = max(year))
+
+glimpse(present)
+```
+
+
+### Exercise 5
+
+The maximum births observed in the "arbuthnot" dataset is 16145, while the minimum
+total births observed in the "present" dataset is 2360399.  The scale of the numbers
+is completley different.
+
+```{r count-compare}
+arbuthnot %>%
+  summarize(min = min(total), max = max(total))
+
+present <- present %>%
+  mutate(total = boys + girls)
+
+present %>%
+  summarize(min = min(total), max = max(total))
+```
+
+
+### Exercise 6
+
+There is indeed a greater ratio of boys born in the "present" dataset, 
+just as was observed in the "arbuthnot" dataset.
+
+```{r plot-prop-boys-present}
+
+present <- present %>%
+  mutate(boy_ratio = boys / total)
+
+ggplot(data = present, aes (x = year, y = boy_ratio)) +
+  geom_smooth() + 
+  geom_point() +
+  geom_line()
+```
+
+
+### Exercise 7
+
+The highest number of births, 4268326 of them, occurred in 1961.
+
+```{r find-max-total}
+totalss <-  present$total
+
+present %>%
+  arrange(desc(total))
+
+```
+
